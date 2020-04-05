@@ -1,0 +1,15 @@
+{
+  "modelPackage": "com.openapisession.ringmyiphonebffapi.model",
+  "apiPackage": "com.openapisession.ringmyiphonebffapi.api",
+  "serializableModel": true,
+  "dateLibrary": "java8",
+  "interfaceOnly": true,
+  "java8": true,
+  "reactive": false,
+  "useBeanValidation": true,
+  "implicitHeaders": false,
+  "useOptional": false,
+  "library": "spring-boot",
+  "unhandledException": true,
+  "useTags": true
+}

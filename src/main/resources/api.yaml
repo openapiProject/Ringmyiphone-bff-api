@@ -1,0 +1,252 @@
+openapi: "3.0.0"
+info:
+  description: "This is a Ring My IPHONE BFF service."
+  version: 1.0.0
+  title: Ring My Iphone BFF API Spec
+  contact:
+    email: "#ITVehicleServices@ehi.com"
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  termsOfService: http://swagger.io/terms/
+servers:
+tags:
+  - name: employee
+    description: Search for employee using logonId
+paths:
+  /utilizationByLocation:
+    post:
+      tags:
+        - utilizationByLocation
+      summary: Search for locations with vehicles meeting criteria.
+      description: Returns a list of locations with counts of vehicles matching criteria within specified radius of a branch, or within a specified hierarchy level of the branch.
+      operationId: locationSummary
+      parameters:
+        - $ref: '#/components/parameters/AcceptVersionHeader'
+        - $ref: '#/components/parameters/EhiLocale'
+        - $ref: '#/components/parameters/EhiApiKey'
+        - $ref: '#/components/parameters/EhiCallingApplication'
+        - $ref: '#/components/parameters/EhiDeviceLocationId'
+        - $ref: '#/components/parameters/XB3SpanId'
+        - $ref: '#/components/parameters/XB3TraceId'
+        - $ref: '#/components/parameters/EhiWorkflowId'
+        - $ref: '#/components/parameters/JWTToken'
+      requestBody:
+        description: Search Criteria object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationSummarySearchCriteria'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-OK-UtilizationByLocationResult'
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '415':
+          $ref: '#/components/responses/415-UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/500-ServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        default:
+          $ref: '#/components/responses/DefaultErrorResponse'
+
+  /employee/{logonId}:
+    get:
+      tags:
+        - employee
+      summary: Retrieve employee information based on logonId
+      description: Retrieves employee name based on logonId.
+      operationId: getEmployee
+      parameters:
+        - name: logonId
+          in: path
+          description: Id of the employee that will be retrieved.
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/AcceptVersionHeader'
+        - $ref: '#/components/parameters/EhiLocale'
+        - $ref: '#/components/parameters/EhiApiKey'
+        - $ref: '#/components/parameters/EhiCallingApplication'
+        - $ref: '#/components/parameters/EhiDeviceLocationId'
+        - $ref: '#/components/parameters/XB3SpanId'
+        - $ref: '#/components/parameters/XB3TraceId'
+        - $ref: '#/components/parameters/EhiWorkflowId'
+        - $ref: '#/components/parameters/JWTToken'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-OK-EmployeeResult'
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '415':
+          $ref: '#/components/responses/415-UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/500-ServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        default:
+          $ref: '#/components/responses/DefaultErrorResponse'
+components:
+  parameters:
+    AcceptVersionHeader:
+      name: Accept-Version
+      in: header
+      description: API version to use
+      required: false
+      schema:
+        type: string
+    JWTToken:
+      name: Authorization
+      description: JWT Token (add "Bearer" in front of the token)
+      in: header
+      required: false
+      schema:
+        type: string
+    XB3SpanId:
+      name: X-B3-SpanId
+      description: Span Id, unique per request. Create new request for forwarding calls.
+      in: header
+      required: false
+      schema:
+        type: string
+    XB3TraceId:
+      name: X-B3-TraceId
+      description: Trace Id,  unique per request trace. Forward the same Id to the subsequent calls.
+      in: header
+      required: false
+      schema:
+        type: string
+    Content-Type:
+      name: Content-Type
+      description: Content-Type of the expected response
+      in: header
+      required: true
+      schema:
+        type: string
+  responses:
+    '200-OK-EmployeeResult':
+      description: OK
+      headers:
+        XB3SpanId:
+          description: Span Id, unique per request. Create new request for forwarding calls.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Employee'
+    '400-BadRequest':
+      description: Invalid Request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    '404-NotFound':
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    '401-Unauthorized':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    '415-UnsupportedMediaType':
+      description: Provided Media Type not supported
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    '500-ServerError':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    '503-ServiceUnavailable':
+      description: Service Unavailable.
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Request limit per hour.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+    'DefaultErrorResponse':
+      description: Generic Error
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        locale:
+          type: string
+        localizedMessage:
+          type: string
+        paths:
+          type: array
+          items:
+            type: string
+        severity:
+          type: string
+        supportInformation:
+          type: string
+      required:
+        - code
+        - locale
+        - localizedMessage
+        - severity
+
+    Employee:
+      description: employee data
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: employee first name
+          example: Justin
+        middleInit:
+          type: string
+          description: employee middle initial
+          example: R
+        lastName:
+          type: string
+          description: employee last name
+          example: Bays
+        legacyJobTitle:
+          type: string
+          description: employee legacy job title
+          example: Software Engineer
