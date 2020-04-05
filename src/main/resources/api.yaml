@@ -14,48 +14,6 @@ tags:
   - name: employee
     description: Search for employee using logonId
 paths:
-  /utilizationByLocation:
-    post:
-      tags:
-        - utilizationByLocation
-      summary: Search for locations with vehicles meeting criteria.
-      description: Returns a list of locations with counts of vehicles matching criteria within specified radius of a branch, or within a specified hierarchy level of the branch.
-      operationId: locationSummary
-      parameters:
-        - $ref: '#/components/parameters/AcceptVersionHeader'
-        - $ref: '#/components/parameters/EhiLocale'
-        - $ref: '#/components/parameters/EhiApiKey'
-        - $ref: '#/components/parameters/EhiCallingApplication'
-        - $ref: '#/components/parameters/EhiDeviceLocationId'
-        - $ref: '#/components/parameters/XB3SpanId'
-        - $ref: '#/components/parameters/XB3TraceId'
-        - $ref: '#/components/parameters/EhiWorkflowId'
-        - $ref: '#/components/parameters/JWTToken'
-      requestBody:
-        description: Search Criteria object
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LocationSummarySearchCriteria'
-      responses:
-        '200':
-          $ref: '#/components/responses/200-OK-UtilizationByLocationResult'
-        '400':
-          $ref: '#/components/responses/400-BadRequest'
-        '401':
-          $ref: '#/components/responses/401-Unauthorized'
-        '404':
-          $ref: '#/components/responses/404-NotFound'
-        '415':
-          $ref: '#/components/responses/415-UnsupportedMediaType'
-        '500':
-          $ref: '#/components/responses/500-ServerError'
-        '503':
-          $ref: '#/components/responses/503-ServiceUnavailable'
-        default:
-          $ref: '#/components/responses/DefaultErrorResponse'
-
   /employee/{logonId}:
     get:
       tags:
@@ -71,13 +29,8 @@ paths:
           schema:
             type: string
         - $ref: '#/components/parameters/AcceptVersionHeader'
-        - $ref: '#/components/parameters/EhiLocale'
-        - $ref: '#/components/parameters/EhiApiKey'
-        - $ref: '#/components/parameters/EhiCallingApplication'
-        - $ref: '#/components/parameters/EhiDeviceLocationId'
         - $ref: '#/components/parameters/XB3SpanId'
         - $ref: '#/components/parameters/XB3TraceId'
-        - $ref: '#/components/parameters/EhiWorkflowId'
         - $ref: '#/components/parameters/JWTToken'
       responses:
         '200':
@@ -229,7 +182,6 @@ components:
         - locale
         - localizedMessage
         - severity
-
     Employee:
       description: employee data
       type: object
