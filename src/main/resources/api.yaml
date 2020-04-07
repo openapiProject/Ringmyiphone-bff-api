@@ -49,6 +49,83 @@ paths:
           $ref: '#/components/responses/503-ServiceUnavailable'
         default:
           $ref: '#/components/responses/DefaultErrorResponse'
+  /firebase/{userId}:
+    get:
+      tags:
+        - getuser
+      summary: service to get user from firebase store
+      description: service to get user from firebase store based on user id
+      operationId: getuser
+      parameters:
+        - name: userId
+          in: path
+          description: Id of the employee that will be retrieved.
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/AcceptVersionHeader'
+        - $ref: '#/components/parameters/XB3SpanId'
+        - $ref: '#/components/parameters/XB3TraceId'
+        - $ref: '#/components/parameters/JWTToken'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-OK-UserResult'
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '415':
+          $ref: '#/components/responses/415-UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/500-ServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        default:
+          $ref: '#/components/responses/DefaultErrorResponse'
+  /firebase/{userid}/create:
+    post:
+      tags:
+        - createUser
+      summary: insert user in firestore based on userid.
+      description: insert user in firestore based on userid.
+      operationId: createUser
+      parameters:
+        - name: userid
+          in: path
+          description: userid
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/AcceptVersionHeader'
+        - $ref: '#/components/parameters/XB3SpanId'
+        - $ref: '#/components/parameters/XB3TraceId'
+        - $ref: '#/components/parameters/JWTToken'
+      requestBody:
+        description: User object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: insert User object successfully
+        '400':
+          $ref: '#/components/responses/400-BadRequest'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '415':
+          $ref: '#/components/responses/415-UnsupportedMediaType'
+        '500':
+          $ref: '#/components/responses/500-ServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        default:
+          $ref: '#/components/responses/DefaultErrorResponse'
 components:
   parameters:
     AcceptVersionHeader:
@@ -83,7 +160,7 @@ components:
       name: Content-Type
       description: Content-Type of the expected response
       in: header
-      required: true
+      required: false
       schema:
         type: string
   responses:
@@ -98,6 +175,17 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Employee'
+    '200-OK-UserResult':
+      description: OK
+      headers:
+        XB3SpanId:
+          description: Span Id, unique per request. Create new request for forwarding calls.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
     '400-BadRequest':
       description: Invalid Request
       content:
@@ -202,3 +290,19 @@ components:
           type: string
           description: employee legacy job title
           example: Software Engineer
+    User:
+      description: User data
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: User first name
+          example: Nick
+        lastname:
+          type: string
+          description: employee last name
+          example: Chang
+        email:
+          type: string
+          description: email address
+          example: test123@gmail.com
